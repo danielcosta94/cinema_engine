@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class SaleItemController
  *
  * @package App\Controller
- * @Route("/api/sale_items/", name="sale_items_api")
+ * @Route("/api/sale_items/", name="sale_items_api_")
  */
 class SaleItemController extends AbstractController
 {

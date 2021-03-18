@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class ShoppingCartController
  *
  * @package App\Controller
- * @Route("/api/shopping_carts/", name="shopping_carts_api")
+ * @Route("/api/shopping_carts/", name="shopping_carts_api_")
  */
 class ShoppingCartController extends AbstractController
 {
@@ -76,7 +76,7 @@ class ShoppingCartController extends AbstractController
      * @param $id
      * @param ShoppingCartService $shoppingCartService
      * @return JsonResponse
-     * @Route("{id}/total", name="add_voucher_to_shopping_cart", methods={"GET"})
+     * @Route("{id}/total", name="add_voucher_to_shopping_cart", methods={"POST"})
      */
     public function getGrossTotalPriceOfShoppingCart(Request $request, $id, ShoppingCartService $shoppingCartService): JsonResponse
     {
