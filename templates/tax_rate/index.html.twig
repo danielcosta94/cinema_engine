@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tax Rates{% endblock %}
+
+{% block content %}
+    <!-- Main content -->
+    <div class="content-wrapper">
+
+        <!-- Content area -->
+        <div class="content">
+
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Tax Rates</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a href="{{ path('tax_rate_new') }}"><button class="btn btn-success">New</button></a>
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tax Rate</th>
+                                <th>Description</th>
+                                <th>Created at</th>
+                                <th>Updated at</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for tax_rate in tax_rates %}
+                            <tr>
+                                <td>{{ tax_rate.id }}</td>
+                                <td>{{ tax_rate.getTaxRate }}</td>
+                                <td>{{ tax_rate.description }}</td>
+                                <td>{{ tax_rate.getCreatedAt ? tax_rate.getCreatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ tax_rate.getUpdatedAt ? tax_rate.getUpdatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td class="no-wrap-content">
+                                    <a href="{{ path('tax_rate_show', {'id': tax_rate.id}) }}" class="btn btn-outline-primary btn-xs" title="Show"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ path('tax_rate_edit', {'id': tax_rate.id}) }}" class="btn btn-outline-warning btn-xs" title="Edit"><i class="fas fa-edit"></i></a>
+                                    {{ include('tax_rate/_delete_form.html.twig') }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">no records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        </div>
+        <!-- /content area -->
+    </div>
+    <!-- /main content -->
+{% endblock %}
+
+{% block javascript_extras %}
+    <!-- Theme JS files -->
+    <script src="{{ asset('js/demo_pages/form_inputs.js') }}"></script>
+
+    <script>
+        $(document).ready(() => {
+            $('.table').DataTable();
+        });
+    </script>
+{% endblock %}

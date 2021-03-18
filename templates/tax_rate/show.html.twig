@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sale Item {{ tax_rate.id }}{% endblock %}
+
+{% block content %}
+    <!-- Main content -->
+    <div class="content-wrapper">
+
+        <!-- Content area -->
+        <div class="content">
+
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Show Sale Item</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th>Tax_rate</th>
+                            <td>{{ tax_rate.taxRate }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ tax_rate.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created at</th>
+                            <td>{{ tax_rate.getCreatedAt ? tax_rate.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Updated at</th>
+                            <td>{{ tax_rate.getUpdatedAt ? tax_rate.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-right mt-2">
+                        <a href="{{ path('tax_rate_index') }}" class="btn btn-outline-primary btn-xs" title="List"><i class="fas fa-list"></i></a>
+                        <a href="{{ path('tax_rate_edit', {'id': tax_rate.id}) }}" class="btn btn-outline-warning btn-xs" title="Edit"><i class="fas fa-edit"></i></a>
+                        {{ include('tax_rate/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+        </div>
+        <!-- /content area -->
+    </div>
+    <!-- /main content -->
+{% endblock %}

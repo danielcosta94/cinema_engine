@@ -106,4 +106,18 @@ class TaxRate
 
         return $this;
     }
+
+    public function jsonSerialize(): array
+    {
+        $created_at = $this->created_at->format('Y-m-d H:i:s');
+        $updated_at = isset($this->updated_at) ? $this->updated_at->format('Y-m-d H:i:s') : null;
+
+        return [
+            'id' => $this->getId(),
+            'tax_rate' => $this->getTaxRate(),
+            'description' => $this->getDescription(),
+            'created_at' => $created_at,
+            'updated_at' => $updated_at,
+        ];
+    }
 }

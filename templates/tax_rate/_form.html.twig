@@ -1,0 +1,31 @@
+{{ form_start(form) }}
+<div class="my-custom-class-for-errors">
+    {{ form_errors(form, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<fieldset>
+    <legend class="text-uppercase font-size-sm font-weight-bold">Data To Fill</legend>
+
+    <div class="form-group">
+        <label for="description" class="col-form-label">Tax Rate</label>
+        {{ form_widget(form.tax_rate, {'attr': {'class': 'form-control'}}) }}
+        <div class="text-danger mt-1">
+            {{ form_errors(form.tax_rate) }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="description" class="col-form-label">Description</label>
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        <div class="text-danger mt-1">
+            {{ form_errors(form.description) }}
+        </div>
+    </div>
+</fieldset>
+
+
+<div class="text-right">
+    <button type="submit" class="btn btn-primary"><a href="{{ path('sale_item_index') }}"></a>List <i class="icon-list ml-2"></i></button>
+    <button type="submit" class="btn btn-success">{{ button_label|default('Save') }} <i class="icon-paperplane ml-2"></i></button>
+</div>
+{{ form_end(form, {'attr': {'class': 'form-control'}}) }}
