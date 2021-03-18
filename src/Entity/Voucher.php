@@ -43,6 +43,12 @@ class Voucher
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="float")
+     * @Assert\Range(min = 0, max = 100, notInRangeMessage = "Percentage must be between {{ min }} and {{ max }}")
+     */
+    private $discount_percentage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -80,6 +86,25 @@ class Voucher
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDiscountPercentage(): ?float
+    {
+        return $this->discount_percentage;
+    }
+
+    /**
+     * @param mixed $discount_percentage
+     * @return Voucher
+     */
+    public function setDiscountPercentage($discount_percentage): self
+    {
+        $this->discount_percentage = $discount_percentage;
 
         return $this;
     }

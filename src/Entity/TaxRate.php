@@ -77,18 +77,6 @@ class TaxRate
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
     /**
      * @return Collection|SaleItemCategory[]
      */
@@ -101,7 +89,7 @@ class TaxRate
     {
         if (!$this->saleItemCategories->contains($saleItemCategory)) {
             $this->saleItemCategories[] = $saleItemCategory;
-            $saleItemCategory->setTaxRateId($this);
+            $saleItemCategory->setTaxRate($this);
         }
 
         return $this;
@@ -111,8 +99,8 @@ class TaxRate
     {
         if ($this->saleItemCategories->removeElement($saleItemCategory)) {
             // set the owning side to null (unless already changed)
-            if ($saleItemCategory->getTaxRateId() === $this) {
-                $saleItemCategory->setTaxRateId(null);
+            if ($saleItemCategory->getTaxRate() === $this) {
+                $saleItemCategory->setTaxRate(null);
             }
         }
 
