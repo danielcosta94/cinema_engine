@@ -7,10 +7,15 @@ use App\Traits\Timestamps;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ShoppingCartRepository::class)
- * @ORM\Table(name="shopping_carts"),
+ * @ORM\Table(name="shopping_carts", uniqueConstraints={@ORM\UniqueConstraint(name="voucher_unique",columns={"voucher_id"})},
+ *     indexes={
+ *          @ORM\Index(name="voucher_idx", columns={"voucher_id"}),
+ *     }),
+ * @UniqueEntity(fields="voucher", errorPath="voucher", message="Sorry, this voucher was already used.")
  * @ORM\HasLifecycleCallbacks()
  */
 class ShoppingCart

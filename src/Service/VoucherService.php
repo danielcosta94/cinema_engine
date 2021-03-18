@@ -2,13 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\SaleItem;
-use App\Repository\SaleItemRepository;
+use App\Entity\Voucher;
+use App\Repository\VoucherRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 
-class SaleItemService
+class VoucherService
 {
     /**
      * @var EntityManagerInterface
@@ -16,22 +16,22 @@ class SaleItemService
     private EntityManagerInterface $entityManager;
 
     /**
-     * @var SaleItemRepository
+     * @var VoucherRepository 
      */
-    private SaleItemRepository $saleItemRepository;
+    private VoucherRepository $voucherRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, SaleItemRepository $saleItemRepository)
+    public function __construct(EntityManagerInterface $entityManager, VoucherRepository $voucherRepository)
     {
         $this->entityManager = $entityManager;
-        $this->saleItemRepository = $saleItemRepository;
+        $this->voucherRepository = $voucherRepository;
     }
 
-    public function saveSaleItem(SaleItem $saleItem): SaleItem
+    public function saveVoucher(Voucher $voucher): Voucher
     {
-        $this->entityManager->persist($saleItem);
+        $this->entityManager->persist($voucher);
         $this->entityManager->flush();
 
-        return $saleItem;
+        return $voucher;
     }
 
     /**
@@ -40,7 +40,7 @@ class SaleItemService
      * @return array
      * @throws \Exception
      */
-    public function findSaleItems(array $data): array
+    public function findVouchers(array $data): array
     {
         try {
             if (!empty($data['limit'])) {
@@ -71,7 +71,7 @@ class SaleItemService
                 $orderBy = null;
             }
 
-            return $this->saleItemRepository->findBy($data, $orderBy, $limit, $offset);
+            return $this->voucherRepository->findBy($data, $orderBy, $limit, $offset);
         } catch (ORMException $ORMException) {
             throw $ORMException;
         } catch (\Exception $exception) {
@@ -79,32 +79,32 @@ class SaleItemService
         }
     }
 
-    public function findSaleItemById($id, $lockMode = null, $lockVersion = null): ?SaleItem
+    public function findVoucherById($id, $lockMode = null, $lockVersion = null): ?Voucher
     {
         try {
-            return $this->saleItemRepository->find($id, $lockMode, $lockVersion);
+            return $this->voucherRepository->find($id, $lockMode, $lockVersion);
         } catch (\Exception $exception) {
             throw $exception;
         }
     }
 
-    public function findSaleItemByCriteria(array $criteria = [], array $orderBy = null): ?SaleItem
+    public function findVoucherByCriteria(array $criteria = [], array $orderBy = null): ?Voucher
     {
         try {
-            return $this->saleItemRepository->findOneBy($criteria, $orderBy);
+            return $this->voucherRepository->findOneBy($criteria, $orderBy);
         } catch (\Exception $exception) {
             throw $exception;
         }
     }
 
-    public function deleteSaleItem($id): ?SaleItem
+    public function deleteVoucher($id): ?Voucher
     {
         try {
-            if ($saleItem = $this->findSaleItemById($id)) {
-                $this->entityManager->remove($saleItem);
+            if ($voucher = $this->findVoucherById($id)) {
+                $this->entityManager->remove($voucher);
                 $this->entityManager->flush();
             }
-            return $saleItem;
+            return $voucher;
         } catch (\Exception $exception) {
             throw $exception;
         }

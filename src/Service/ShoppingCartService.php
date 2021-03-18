@@ -2,13 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\SaleItem;
-use App\Repository\SaleItemRepository;
+use App\Entity\ShoppingCart;
+use App\Entity\Voucher;
+use App\Repository\ShoppingCartRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class SaleItemService
+class ShoppingCartService
 {
     /**
      * @var EntityManagerInterface
@@ -16,22 +18,22 @@ class SaleItemService
     private EntityManagerInterface $entityManager;
 
     /**
-     * @var SaleItemRepository
+     * @var ShoppingCartRepository
      */
-    private SaleItemRepository $saleItemRepository;
+    private ShoppingCartRepository $shoppingCartRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, SaleItemRepository $saleItemRepository)
+    public function __construct(EntityManagerInterface $entityManager, ShoppingCartRepository $shoppingCartRepository)
     {
         $this->entityManager = $entityManager;
-        $this->saleItemRepository = $saleItemRepository;
+        $this->shoppingCartRepository = $shoppingCartRepository;
     }
 
-    public function saveSaleItem(SaleItem $saleItem): SaleItem
+    public function saveShoppingCart(ShoppingCart $shoppingCart): ShoppingCart
     {
-        $this->entityManager->persist($saleItem);
+        $this->entityManager->persist($shoppingCart);
         $this->entityManager->flush();
 
-        return $saleItem;
+        return $shoppingCart;
     }
 
     /**
@@ -40,7 +42,7 @@ class SaleItemService
      * @return array
      * @throws \Exception
      */
-    public function findSaleItems(array $data): array
+    public function findShoppingCarts(array $data): array
     {
         try {
             if (!empty($data['limit'])) {
@@ -71,7 +73,7 @@ class SaleItemService
                 $orderBy = null;
             }
 
-            return $this->saleItemRepository->findBy($data, $orderBy, $limit, $offset);
+            return $this->shoppingCartRepository->findBy($data, $orderBy, $limit, $offset);
         } catch (ORMException $ORMException) {
             throw $ORMException;
         } catch (\Exception $exception) {
@@ -79,34 +81,46 @@ class SaleItemService
         }
     }
 
-    public function findSaleItemById($id, $lockMode = null, $lockVersion = null): ?SaleItem
+    public function findShoppingCartById($id, $lockMode = null, $lockVersion = null): ?ShoppingCart
     {
         try {
-            return $this->saleItemRepository->find($id, $lockMode, $lockVersion);
+            return $this->shoppingCartRepository->find($id, $lockMode, $lockVersion);
         } catch (\Exception $exception) {
             throw $exception;
         }
     }
 
-    public function findSaleItemByCriteria(array $criteria = [], array $orderBy = null): ?SaleItem
+    public function findShoppingCartByCriteria(array $criteria = [], array $orderBy = null): ?ShoppingCart
     {
         try {
-            return $this->saleItemRepository->findOneBy($criteria, $orderBy);
+            return $this->shoppingCartRepository->findOneBy($criteria, $orderBy);
         } catch (\Exception $exception) {
             throw $exception;
         }
     }
 
-    public function deleteSaleItem($id): ?SaleItem
+    public function deleteShoppingCart($id): ?ShoppingCart
     {
         try {
-            if ($saleItem = $this->findSaleItemById($id)) {
-                $this->entityManager->remove($saleItem);
+            if ($shoppingCart = $this->findShoppingCartById($id)) {
+                $this->entityManager->remove($shoppingCart);
                 $this->entityManager->flush();
             }
-            return $saleItem;
+            return $shoppingCart;
         } catch (\Exception $exception) {
             throw $exception;
+        }
+    }
+
+    public function addVoucherToShoppingCart(ShoppingCart $shoppingCart, Voucher $voucher): bool
+    {
+        $shoppingCartVoucher = $shoppingCart->getVoucher();
+        if ($shoppingCartVoucher === null) {
+            $shoppingCart->setVoucher($voucher);
+            $this->saveShoppingCart($shoppingCart);
+            return $shoppingCart->getVoucher() !== null;
+        } else {
+            throw new UnprocessableEntityHttpException("Shopping cart has already one voucher code associated");
         }
     }
 }
