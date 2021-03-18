@@ -1,0 +1,15 @@
+form label.required:before {
+    color: #E53935;
+    content: " * ";
+}
+
+.btn-xs {
+    padding: .20rem .4rem;
+    font-size: .675rem;
+    line-height: .5;
+    font-weight: 500;
+}
+
+.no-wrap-content {
+    white-space: nowrap;
+}
