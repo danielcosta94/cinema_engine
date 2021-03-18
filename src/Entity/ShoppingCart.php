@@ -25,9 +25,14 @@ class ShoppingCart
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Voucher::class, mappedBy="shopping_cart")
+     * @ORM\Column(type="datetime")
      */
-    private $vouchers;
+    private $purchase_at;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Voucher::class, inversedBy="shoppingCarts")
+     */
+    private $voucher;
 
     /**
      * @ORM\OneToMany(targetEntity=ShoppingCartItem::class, mappedBy="shopping_cart", orphanRemoval=true)
@@ -36,7 +41,6 @@ class ShoppingCart
 
     public function __construct()
     {
-        $this->vouchers = new ArrayCollection();
         $this->shoppingCartItems = new ArrayCollection();
     }
 
@@ -53,36 +57,6 @@ class ShoppingCart
     public function setPurchaseAt(\DateTimeInterface $purchase_at): self
     {
         $this->purchase_at = $purchase_at;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Voucher[]
-     */
-    public function getVouchers(): Collection
-    {
-        return $this->vouchers;
-    }
-
-    public function addVoucher(Voucher $voucher): self
-    {
-        if (!$this->vouchers->contains($voucher)) {
-            $this->vouchers[] = $voucher;
-            $voucher->setShoppingCart($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVoucher(Voucher $voucher): self
-    {
-        if ($this->vouchers->removeElement($voucher)) {
-            // set the owning side to null (unless already changed)
-            if ($voucher->getShoppingCart() === $this) {
-                $voucher->setShoppingCart(null);
-            }
-        }
 
         return $this;
     }
@@ -113,6 +87,18 @@ class ShoppingCart
                 $shoppingCartItem->setShoppingCartId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVoucher(): ?Voucher
+    {
+        return $this->voucher;
+    }
+
+    public function setVoucher(?Voucher $voucher): self
+    {
+        $this->voucher = $voucher;
 
         return $this;
     }

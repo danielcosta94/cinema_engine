@@ -4,10 +4,9 @@ namespace App\Fixtures;
 
 use App\Entity\Voucher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class VoucherFixtures extends Fixture implements DependentFixtureInterface
+class VoucherFixtures extends Fixture
 {
     public const VOUCHER_1 = '38123812039';
     public const VOUCHER_2 = '31283120398';
@@ -21,7 +20,6 @@ class VoucherFixtures extends Fixture implements DependentFixtureInterface
         $voucher1->setCode(self::VOUCHER_1);
         $voucher1->setDescription('Ticket');
         $voucher1->setDiscountPercentage(10);
-        $voucher1->setShoppingCart($this->getReference(sprintf("%s%d", ShoppingCartFixtures::REFERENCE_PREFIX, 1)));
         $this->addReference(sprintf("%s%s", self::REFERENCE_PREFIX, self::VOUCHER_1), $voucher1);
 
         $manager->persist($voucher1);
@@ -39,12 +37,5 @@ class VoucherFixtures extends Fixture implements DependentFixtureInterface
         /* -------- End Voucher 2 --------- */
 
         $manager->flush();
-    }
-
-    public function getDependencies(): array
-    {
-        return [
-            ShoppingCartFixtures::class
-        ];
     }
 }

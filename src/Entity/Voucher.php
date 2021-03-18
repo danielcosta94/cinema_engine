@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VoucherRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,11 +35,6 @@ class Voucher
     private $code;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ShoppingCart::class, inversedBy="vouchers")
-     */
-    private $shopping_cart;
-
-    /**
      * @ORM\Column(type="string", nullable=true, length=255)
      * @Assert\Length(max = 255, maxMessage = "Description be longer than {{ limit }} characters")
      */
@@ -48,6 +45,16 @@ class Voucher
      * @Assert\Range(min = 0, max = 100, notInRangeMessage = "Percentage must be between {{ min }} and {{ max }}")
      */
     private $discount_percentage;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ShoppingCart::class, mappedBy="voucher")
+     */
+    private $shoppingCarts;
+
+    public function __construct()
+    {
+        $this->shoppingCarts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,18 +69,6 @@ class Voucher
     public function setCode(string $code): self
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    public function getShoppingCart(): ?ShoppingCart
-    {
-        return $this->shopping_cart;
-    }
-
-    public function setShoppingCart(?ShoppingCart $shopping_cart): self
-    {
-        $this->shopping_cart = $shopping_cart;
 
         return $this;
     }
@@ -105,6 +100,36 @@ class Voucher
     public function setDiscountPercentage($discount_percentage): self
     {
         $this->discount_percentage = $discount_percentage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ShoppingCart[]
+     */
+    public function getShoppingCarts(): Collection
+    {
+        return $this->shoppingCarts;
+    }
+
+    public function addShoppingCart(ShoppingCart $shoppingCart): self
+    {
+        if (!$this->shoppingCarts->contains($shoppingCart)) {
+            $this->shoppingCarts[] = $shoppingCart;
+            $shoppingCart->setVoucher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShoppingCart(ShoppingCart $shoppingCart): self
+    {
+        if ($this->shoppingCarts->removeElement($shoppingCart)) {
+            // set the owning side to null (unless already changed)
+            if ($shoppingCart->getVoucher() === $this) {
+                $shoppingCart->setVoucher(null);
+            }
+        }
 
         return $this;
     }
