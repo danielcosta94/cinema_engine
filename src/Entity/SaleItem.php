@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields="barcode", errorPath="barcode", message="Sorry, this barcode is already in use.")
  * @ORM\HasLifecycleCallbacks()
  */
-class SaleItem
+class SaleItem implements \JsonSerializable
 {
     use Timestamps;
 
@@ -171,5 +171,17 @@ class SaleItem
         }
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'barcode' => $this->getBarcode(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'price' => $this->getPrice(),
+            'category' => $this->getCategory()->getDescription(),
+        ];
     }
 }
