@@ -1,0 +1,28 @@
+version: '3'
+services:
+  cinema-price-engine-php:
+    image: webdevops/php-nginx-dev:7.4
+    container_name: cinema-price-engine
+    working_dir: /app
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+      - PHP_DISPLAY_ERRORS=1
+      - PHP_MEMORY_LIMIT=2048M
+      - PHP_MAX_EXECUTION_TIME=-1
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/app:rw,cached
+  mysql:
+    container_name: cinema-price-engine-mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    command: mysqld --sql_mode="ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - cinema-price-engine-db-mysql:/var/lib/mysql
+
+volumes:
+  cinema-price-engine-db-mysql:
