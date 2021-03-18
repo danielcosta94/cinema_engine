@@ -23,6 +23,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SaleItemCategory
 {
+    public const TICKET_TYPE = 'ticket';
+
     use Timestamps;
 
     /**

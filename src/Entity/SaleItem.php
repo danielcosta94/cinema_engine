@@ -155,7 +155,7 @@ class SaleItem implements \JsonSerializable
     {
         if (!$this->shoppingCartItems->contains($shoppingCartItem)) {
             $this->shoppingCartItems[] = $shoppingCartItem;
-            $shoppingCartItem->setSaleItemId($this);
+            $shoppingCartItem->setSaleItem($this);
         }
 
         return $this;
@@ -165,8 +165,8 @@ class SaleItem implements \JsonSerializable
     {
         if ($this->shoppingCartItems->removeElement($shoppingCartItem)) {
             // set the owning side to null (unless already changed)
-            if ($shoppingCartItem->getSaleItemId() === $this) {
-                $shoppingCartItem->setSaleItemId(null);
+            if ($shoppingCartItem->getSaleItem() === $this) {
+                $shoppingCartItem->setSaleItem(null);
             }
         }
 

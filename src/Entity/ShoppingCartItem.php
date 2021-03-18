@@ -78,12 +78,12 @@ class ShoppingCartItem
         return $this;
     }
 
-    public function getSaleItemId(): ?SaleItem
+    public function getSaleItem(): ?SaleItem
     {
         return $this->sale_item;
     }
 
-    public function setSaleItemId(?SaleItem $sale_item): self
+    public function setSaleItem(?SaleItem $sale_item): self
     {
         $this->sale_item = $sale_item;
 

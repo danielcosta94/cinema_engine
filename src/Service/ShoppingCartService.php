@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\SaleItemCategory;
 use App\Entity\ShoppingCart;
+use App\Entity\ShoppingCartItem;
 use App\Entity\Voucher;
 use App\Repository\ShoppingCartRepository;
 use Doctrine\Common\Collections\Criteria;
@@ -122,5 +124,40 @@ class ShoppingCartService
         } else {
             throw new UnprocessableEntityHttpException("Shopping cart has already one voucher code associated");
         }
+    }
+
+    private function getGrossPriceOfShoppingCartItem(ShoppingCartItem $shoppingCartItem): float
+    {
+        $price_unit = $shoppingCartItem->getPriceNetUnit() * (($shoppingCartItem->getTaxRate() / 100) + 1);
+        return $price_unit * $shoppingCartItem->getQuantity();
+    }
+
+    private function getDiscountValueOfPrice(float $price, float $discountPercentage): float
+    {
+        return ($discountPercentage / 100) * $price;
+    }
+
+    public function getGrossTotalPriceOfShoppingCart(ShoppingCart $shoppingCart): float
+    {
+        $total = 0;
+        $voucher = $shoppingCart->getVoucher();
+
+        if ($voucher != null) {
+            $discount_percentage = $voucher->getDiscountPercentage();
+
+            foreach ($shoppingCart->getShoppingCartItems() as $shoppingCartItem) {
+                $shoppingCartItemTotalGrossPrice = $this->getGrossPriceOfShoppingCartItem($shoppingCartItem);
+                $total += $shoppingCartItemTotalGrossPrice;
+                if ($shoppingCartItem->getSaleItem()->getCategory()->getType() === SaleItemCategory::TICKET_TYPE) {
+                    $total -= $this->getDiscountValueOfPrice($shoppingCartItemTotalGrossPrice, $discount_percentage);
+                }
+            }
+        } else {
+            foreach ($shoppingCart->getShoppingCartItems() as $shoppingCartItem) {
+                $total += $this->getGrossPriceOfShoppingCartItem($shoppingCartItem);
+            }
+        }
+
+        return round($total, 2);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Voucher;
 use App\Service\ShoppingCartService;
 use App\Service\VoucherService;
 use App\Traits\JsonParser;
@@ -29,7 +28,7 @@ class ShoppingCartController extends AbstractController
      * @param ShoppingCartService $shoppingCartService
      * @param VoucherService $voucherService
      * @return JsonResponse
-     * @Route("{id}/voucher", name="sale_items_get_by_barcode", methods={"POST"})
+     * @Route("{id}/voucher", name="add_voucher_to_shopping_cart", methods={"POST"})
      */
     public function applyVoucherDiscountToShoppingCart(Request $request, $id, ShoppingCartService $shoppingCartService, VoucherService $voucherService): JsonResponse
     {
@@ -65,6 +64,33 @@ class ShoppingCartController extends AbstractController
         } catch (UnprocessableEntityHttpException $unprocessableEntityHttpException) {
             $message = $unprocessableEntityHttpException->getMessage();
             $responseCode = Response::HTTP_UNPROCESSABLE_ENTITY;
+        } catch (\Exception $exception) {
+            $message = $exception->getMessage();
+            $responseCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+        }
+        return $this->response(['message' => $message], $responseCode);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @param ShoppingCartService $shoppingCartService
+     * @return JsonResponse
+     * @Route("{id}/total", name="add_voucher_to_shopping_cart", methods={"GET"})
+     */
+    public function getGrossTotalPriceOfShoppingCart(Request $request, $id, ShoppingCartService $shoppingCartService): JsonResponse
+    {
+        try {
+            $request = $this->transformJsonBody($request);
+
+            $shoppingCart = $shoppingCartService->findShoppingCartById($id);
+            if ($shoppingCart) {
+                $priceGrossTotal = $shoppingCartService->getGrossTotalPriceOfShoppingCart($shoppingCart);
+                return $this->response(['price_gross_total' => $priceGrossTotal]);
+            } else {
+                $message = "Shopping cart not exists";
+                $responseCode = Response::HTTP_NOT_FOUND;
+            }
         } catch (\Exception $exception) {
             $message = $exception->getMessage();
             $responseCode = Response::HTTP_INTERNAL_SERVER_ERROR;
