@@ -50,7 +50,6 @@ class SaleItem implements \JsonSerializable
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
      * @Assert\Length(max = 255, maxMessage = "Description be longer than {{ limit }} characters")
-     * @Assert\NotBlank
      */
     private $description;
 
@@ -173,8 +172,11 @@ class SaleItem implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+        $created_at = $this->created_at->format('Y-m-d H:i:s');
+        $updated_at = isset($this->updated_at) ? $this->updated_at->format('Y-m-d H:i:s') : null;
+
         return [
             'id' => $this->getId(),
             'barcode' => $this->getBarcode(),
@@ -182,6 +184,8 @@ class SaleItem implements \JsonSerializable
             'description' => $this->getDescription(),
             'price' => $this->getPrice(),
             'category' => $this->getCategory()->getDescription(),
+            'created_at' => $created_at,
+            'updated_at' => $updated_at,
         ];
     }
 }

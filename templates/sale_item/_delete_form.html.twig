@@ -1,0 +1,10 @@
+<form method="post" class="d-inline" action="{{ path('sale_item_delete', {'id': sale_item.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sale_item.id) }}">
+
+    {% if button_label is defined %}
+        <button class="btn btn-danger">{{ button_label|default('Save') }}</button>
+    {% else %}
+        <button class="btn btn-outline-danger btn-xs" title="Delete"><i class="fas fa-times"></i></button>
+    {% endif %}
+</form>

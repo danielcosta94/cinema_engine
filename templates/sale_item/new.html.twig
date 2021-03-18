@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Sale Item{% endblock %}
+
+{% block content %}
+    <!-- Main content -->
+    <div class="content-wrapper">
+
+        <!-- Content area -->
+        <div class="content">
+
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Add Sale Item</h5>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                            <a class="list-icons-item" data-action="reload"></a>
+                            <a class="list-icons-item" data-action="remove"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="mb-4"></p>
+
+                    {{ include('sale_item/_form.html.twig') }}
+                </div>
+            </div>
+            <!-- /form inputs -->
+        </div>
+        <!-- /content area -->
+    </div>
+    <!-- /main content -->
+{% endblock %}
+
