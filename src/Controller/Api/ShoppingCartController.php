@@ -76,7 +76,7 @@ class ShoppingCartController extends AbstractController
      * @param $id
      * @param ShoppingCartService $shoppingCartService
      * @return JsonResponse
-     * @Route("{id}/total", name="add_voucher_to_shopping_cart", methods={"POST"})
+     * @Route("{id}/total", name="get_gross_total_shopping_cart", methods={"GET"})
      */
     public function getGrossTotalPriceOfShoppingCart(Request $request, $id, ShoppingCartService $shoppingCartService): JsonResponse
     {
