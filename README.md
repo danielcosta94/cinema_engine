@@ -28,6 +28,20 @@ docker exec -ti cinema-price-engine bash
 composer install
 ```
 
+### Creating database schema and tables
+
+1. Create database schema
+
+```sh
+php bin/console doctrine:database:create
+```
+
+2. Create tables
+
+```sh
+php bin/console doctrine:migrations:migrate 
+```
+
 ### Populating database with fixtures (seeders)
 
 ```sh
