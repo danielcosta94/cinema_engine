@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shopping cart invoice {{ invoice_details.shopping_cart_id }}</title>
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/icons/icomoon/styles.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/bootstrap_limitless.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/layout.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/components.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/colors.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/icons/fontawesome/styles.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script src="{{ asset('js/main/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/main/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/loaders/blockui.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/tables/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/tables/datatables/extensions/responsive.min.js') }}"></script>
+    <script src="{{ asset('js/demo_pages/datatables_responsive.js') }}"></script>
+    <!-- /core JS files -->
+
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <!-- /theme JS files -->
+
+</head>
+<body>
+<!-- Page content -->
+<div class="page-content">
+    <!-- Main content -->
+    <div class="content-wrapper">
+        <!-- Content area -->
+        <div class="content">
+            <!-- Form inputs -->
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Shopping Cart {{ invoice_details.shopping_cart_id }}</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="my-3">
+                        <h4>General Information</h4>
+                        <table class="table table-bordered table-striped">
+                            <tbody>
+                            <tr>
+                                <th>Purchase at</th>
+                                <td>{{ invoice_details.purchase_at ? invoice_details.purchase_at|date('Y-m-d H:i:s') : '' }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="my-3">
+                        <h4>Products list</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Net Price Unit</th>
+                                <th>Quantity</th>
+                                <th>Discount</th>
+                                <th>Tax Rate</th>
+                                <th>Total Gross Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for sale_item in invoice_details.sales_items %}
+                                <tr>
+                                    <td>{{ sale_item.title }}</td>
+                                    <td class="text-right">{{ sale_item.net_price_unit | number_format(2, '.', ',') }}</td>
+                                    <td class="text-right">{{ sale_item.quantity }}</td>
+                                    <td class="text-right">{{ sale_item.discount }}<span>&#37;</span></td>
+                                    <td class="text-right">{{ sale_item.tax_rate }}<span>&#37;</span></td>
+                                    <td class="font-weight-bold text-right">{{ sale_item.total_gross_price | number_format(2, '.', ',') }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6">This invoice does not have sale items</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="my-3">
+                        <h4>Total Taxes By Category</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Total Taxes</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for type, total_tax_paid_by_category in invoice_details.total_taxes_paid_by_category %}
+                                <tr>
+                                    <td>{{ type }}</td>
+                                    <td class="font-weight-bold text-right">{{ total_tax_paid_by_category | number_format(2, '.', ',') }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6">This invoice does not have sale items</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="my-3">
+                        <h4>Total to pay</h4>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Net Price Unit</th>
+                                <th>Total Taxes</th>
+                                <th>Total Gross Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="text-right">{{ invoice_details.total_net_price | number_format(2, '.', ',') }}</td>
+                                <td class="text-right">{{ invoice_details.total_taxes | number_format(2, '.', ',') }}</td>
+                                <td class="text-right text-danger font-weight-bold">{{ invoice_details.total_gross_price | number_format(2, '.', ',') }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /form inputs -->
+            <div class="col-md-12 bottom-legend">
+                <b>Invoice created at: {{ "now"|date("Y-m-d H:i:s") }}</b>
+            </div>
+        </div>
+        <!-- /content area -->
+    </div>
+    <!-- /main content -->
+</div>
+</body>
+<script>
+    window.print();
+</script>
+</html>

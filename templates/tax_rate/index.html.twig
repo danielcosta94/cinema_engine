@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table">
+                    <table class="dataTable datatable no-footer table table-bordered table-fixed table-hover table-striped tableau">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -48,10 +48,6 @@
                                     <a href="{{ path('tax_rate_edit', {'id': tax_rate.id}) }}" class="btn btn-outline-warning btn-xs" title="Edit"><i class="fas fa-edit"></i></a>
                                     {{ include('tax_rate/_delete_form.html.twig') }}
                                 </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="5">no records found</td>
                             </tr>
                         {% endfor %}
                         </tbody>

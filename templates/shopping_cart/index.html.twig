@@ -1,21 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sale Items{% endblock %}
+{% block title %}Shopping Carts{% endblock %}
 
 {% block content %}
     <!-- Main content -->
     <div class="content-wrapper">
-
         <!-- Content area -->
         <div class="content">
-
             <!-- Form inputs -->
             <div class="card">
                 <div class="card-header header-elements-inline">
-                    <h5 class="card-title">Sale Items</h5>
+                    <h5 class="card-title">Shopping Carts</h5>
                     <div class="header-elements">
                         <div class="list-icons">
-                            <a href="{{ path('sale_item_new') }}"><button class="btn btn-success">New</button></a>
                             <a class="list-icons-item" data-action="collapse"></a>
                             <a class="list-icons-item" data-action="reload"></a>
                             <a class="list-icons-item" data-action="remove"></a>
@@ -27,26 +24,20 @@
                     <table class="dataTable datatable no-footer table table-bordered table-fixed table-hover table-striped tableau">
                         <thead>
                             <tr>
-                                <th>Barcode</th>
-                                <th>Title</th>
-                                <th>Price</th>
-                                <th>Created at</th>
-                                <th>Updated at</th>
+                                <th>ID</th>
+                                <th>Purchase At</th>
+                                <th>Voucher</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                        {% for sale_item in sale_items %}
+                        {% for shopping_cart in shopping_carts %}
                             <tr>
-                                <td>{{ sale_item.barcode }}</td>
-                                <td>{{ sale_item.title }}</td>
-                                <td class="text-right">{{ sale_item.price | number_format(2, '.', ',') }}</td>
-                                <td>{{ sale_item.getCreatedAt ? sale_item.getCreatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                                <td>{{ sale_item.getUpdatedAt ? sale_item.getUpdatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ shopping_cart.id }}</td>
+                                <td>{{ shopping_cart.purchaseAt ? shopping_cart.purchaseAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{% if shopping_cart.voucher is not null %}<span>{{ shopping_cart.voucher.getDiscountPercentage }}<span>&#37;</span></span>{% else %}<span>N/A</span>{% endif %}</td>
                                 <td class="no-wrap-content">
-                                    <a href="{{ path('sale_item_show', {'id': sale_item.id}) }}" class="btn btn-outline-primary btn-xs" title="Show"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ path('sale_item_edit', {'id': sale_item.id}) }}" class="btn btn-outline-warning btn-xs" title="Edit"><i class="fas fa-edit"></i></a>
-                                    {{ include('sale_item/_delete_form.html.twig') }}
+                                    <a href="{{ path('shopping_cart_invoice_details', {'id': shopping_cart.id}) }}" class="btn btn-outline-danger btn-xs" title="Export to PDF"><i class="fas fa-file-pdf"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}
